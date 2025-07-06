@@ -11,9 +11,13 @@
 ## System Architecture
 
 ### 📡 AtmoSync Architecture
+The HubVolt system centers around an ESP32 microcontroller connected to a transistor-driven buck converter that enables or disables the USB hub's power supply. The firmware listens for TCP commands to activate or deactivate the USB Hub power. A web dashboard enables seamless control and configuration. Safety features such as emergency shutdown and Wi-Fi fallback modes ensure reliability.
+
 ![AtmoSync Architecture](AtmoSync/AtmoSync.svg)
 
 ### 🔌 HubVolt Architecture
+AtmoSync uses an ESP32 microcontroller interfaced with an SHT31 temperature and humidity sensor via I2C. It continuously displays data on an 8x32 LED matrix using the MAX7219 module and communicates the data to a central server via TCP or POST. The firmware includes dynamic AP+STA Wi-Fi configuration and sensor readouts periodically for live environmental tracking.
+
 ![HubVolt Architecture](HubVolt/HubVolt.svg)
 
 Both **HubVolt** and **AtmoSync** are ESP32-based IoT systems. HubVolt focuses on **USB hub power control**, while AtmoSync is a **temperature and humidity logger** with display capabilities. Each system uses a web-based configuration interface and communicates with a server for registration and command handling.
