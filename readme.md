@@ -11,10 +11,10 @@
 ## System Architecture
 
 ### 📡 AtmoSync Architecture
-![AtmoSync Architecture](AtmoSync/AtmoSync_Architecture.svg)
+![AtmoSync Architecture](AtmoSync/AtmoSync.svg)
 
 ### 🔌 HubVolt Architecture
-![HubVolt Architecture](HubVolt/HubVolt_Architecture.svg)
+![HubVolt Architecture](HubVolt/HubVolt.svg)
 
 Both **HubVolt** and **AtmoSync** are ESP32-based IoT systems. HubVolt focuses on **USB hub power control**, while AtmoSync is a **temperature and humidity logger** with display capabilities. Each system uses a web-based configuration interface and communicates with a server for registration and command handling.
 
@@ -43,30 +43,24 @@ All files/
 
 ## Components List
 
-### 🔧 AtmoSync Bill of Materials
+### 🔧 AtmoSync Components
 
 | Component               | Quantity | Description                          |
 |------------------------|----------|--------------------------------------|
 | ESP32 Dev Board        | 1        | Core microcontroller                 |
 | SHT31 Sensor           | 1        | Temperature & humidity sensor        |
 | MAX7219 Display Module | 1        | 8x32 LED Matrix (4-in-1)             |
-| 10kΩ Resistor          | 1        | For boot button pull-up              |
-| Boot Push Button       | 1        | Reset configuration                  |
-| Wires + Connectors     | As req.  | Jumper wires for connections         |
+| Buck converter         | 1        | step down DC power to 5v             |
 
 
-### 🔌 HubVolt Bill of Materials
+### 🔌 HubVolt Components
 
 | Component             | Quantity | Description                            |
 |----------------------|----------|----------------------------------------|
 | ESP32 Dev Board      | 1        | Core microcontroller                   |
-| Relay Module / MOSFET| 1        | Controls USB hub power                 |
-| Transistor (e.g., 2N2222) | 1     | Relay drive (optional variant)        |
-| Diode (1N4007)        | 1        | Flyback protection                     |
-| 10kΩ Resistor         | 1        | For boot button pull-up                |
-| Boot Push Button      | 1        | Clears saved configuration             |
-| Enclosure (3D printed)| 1        | Protective housing for deployment     |
-
+| Transistor (e.g., 2N2222) | 1     | Cntrolling switching power supply of USB HUB   |
+| Buck converter       | 2        | step down DC power to 5v               |
+| USB Hub module       | 1        | provide USB hub functionality           |
 ---
 
 ## First-Time Setup Guide
