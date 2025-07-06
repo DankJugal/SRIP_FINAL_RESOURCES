@@ -8,10 +8,15 @@
 
 ---
 
-## Introduction
+## System Architecture
 
-This repository contains all hardware, firmware, and design resources for the **HubVolt** and **AtmoSync** IoT projects.  
-It is intended as a reference for circuit schematics, PCB manufacturing files, firmware, and enclosure designs.
+### 📡 AtmoSync Architecture
+![AtmoSync Architecture](AtmoSync/AtmoSync_Architecture.svg)
+
+### 🔌 HubVolt Architecture
+![HubVolt Architecture](HubVolt/HubVolt_Architecture.svg)
+
+Both **HubVolt** and **AtmoSync** are ESP32-based IoT systems. HubVolt focuses on **USB hub power control**, while AtmoSync is a **temperature and humidity logger** with display capabilities. Each system uses a web-based configuration interface and communicates with a server for registration and command handling.
 
 ---
 
@@ -36,65 +41,80 @@ All files/
 
 ---
 
-## Resource Details
+## Components List
 
-### AtmoSync
+### 🔧 AtmoSync Bill of Materials
 
-- **Schematic_AtmoSync_v1/**  
-  Circuit schematic files for AtmoSync hardware (KiCAD or PDF).
-- **AtmoSync.svg**  
-  Schematic diagram as an SVG image for quick reference.  
-  ![AtmoSync Schematic](AtmoSync/AtmoSync.svg)
-- **AtmoSync_v1.ino**  
-  Arduino/ESP32 firmware source code for AtmoSync device.
-- **Gerber_AtmoSync_v1.zip**  
-  Gerber files for PCB manufacturing (upload to your PCB fab house).
+| Component               | Quantity | Description                          |
+|------------------------|----------|--------------------------------------|
+| ESP32 Dev Board        | 1        | Core microcontroller                 |
+| SHT31 Sensor           | 1        | Temperature & humidity sensor        |
+| MAX7219 Display Module | 1        | 8x32 LED Matrix (4-in-1)             |
+| 10kΩ Resistor          | 1        | For boot button pull-up              |
+| Boot Push Button       | 1        | Reset configuration                  |
+| Wires + Connectors     | As req.  | Jumper wires for connections         |
 
-### HubVolt
 
-- **Schematic_HubVolt_v1/**  
-  Circuit schematic files for HubVolt hardware (KiCAD or PDF).
-- **HubVolt.svg**  
-  Schematic diagram as an SVG image for quick reference.  
-  ![HubVolt Schematic](HubVolt/HubVolt.svg)
-- **HubVolt_v1.ino**  
-  Arduino/ESP32 firmware source code for HubVolt device.
-- **Gerber_HubVolt_v1.0.zip**  
-  Gerber files for HubVolt PCB, version 1.0.
-- **Gerber_HubVolt_v1.1.zip**  
-  Gerber files for HubVolt PCB, version 1.1 (latest).
-- **Enclosure_design/**  
-  3D printable enclosure files for HubVolt (STL, STEP, or similar).
+### 🔌 HubVolt Bill of Materials
+
+| Component             | Quantity | Description                            |
+|----------------------|----------|----------------------------------------|
+| ESP32 Dev Board      | 1        | Core microcontroller                   |
+| Relay Module / MOSFET| 1        | Controls USB hub power                 |
+| Transistor (e.g., 2N2222) | 1     | Relay drive (optional variant)        |
+| Diode (1N4007)        | 1        | Flyback protection                     |
+| 10kΩ Resistor         | 1        | For boot button pull-up                |
+| Boot Push Button      | 1        | Clears saved configuration             |
+| Enclosure (3D printed)| 1        | Protective housing for deployment     |
 
 ---
 
-## How to Use
+## First-Time Setup Guide
 
-1. **Schematics:**  
-   Open schematic files in KiCAD or your preferred viewer, or view the SVG for a quick look.
+To change saved WiFi or server configuration after initial setup:
+- First, turn OFF the power supply to the device.
+- Press and HOLD the **boot button**.
+- Turn ON the power supply **while keeping the boot button pressed**.
+- Hold for **at least 1 second**, then release.
+- The device will now boot into configuration mode.
 
-2. **Firmware:**  
-   - Open `.ino` files in the Arduino IDE or PlatformIO.
-   - Flash to ESP32 hardware as per project instructions.
-
-3. **PCB Manufacturing:**  
-   - Unzip the Gerber files and upload them to your PCB manufacturer.
-   - Use the latest version for best results.
-
-4. **Enclosure:**  
-   - Open 3D design files in your CAD software or slicer.
-   - Print or fabricate as needed.
-
----
-
-## Notes
-
-- All files are provided as-is for reference and reproduction.
-- For full project documentation, see the main project repository or contact the authors.
-- Hardware and firmware are open for educational and research use.
+1. **Power the ESP32** with USB or 5V supply.
+2. Press the **boot button** before power-on to clear saved WiFi & server config.
+3. Connect to the Access Point: `ESP32-Setup` → Password: `configureme`
+4. Open browser → navigate to `192.168.4.1`
+5. Fill the configuration form:
+   - Device Name (e.g., atmosync01 or hubvolt01)
+   - WiFi SSID / Password
+   - Server IP and Port
+   - Auth method (Open / Personal / Enterprise)
+6. Save → Device restarts → Connects to WiFi → Registers with server.
 
 ---
 
-## Credits
+## Troubleshooting
 
-Developed during the Summer Research Internship Program (SRIP) at IIT Gandhinagar.
+### 🔁 Reconfiguration Instructions
+If you want to change the WiFi and Server configuration parameters:
+1. Turn off the device's power supply.
+2. Press and hold the boot button.
+3. While holding it, power on the device.
+4. Keep it pressed for at least 1 second.
+5. Release the button; the device will enter setup mode.
+
+Then reconnect to `ESP32-Setup` WiFi and open `192.168.4.1` to reconfigure.
+
+| Issue                              | Possible Cause                      | Solution                               |
+|-----------------------------------|-------------------------------------|----------------------------------------|
+| Device not visible on network     | Wrong WiFi credentials              | Reboot with boot button, reconfigure   |
+| Configuration page not loading    | Not in AP mode                      | Check serial monitor for IP info       |
+| Data not displaying on matrix     | Sensor error or no data             | Check wiring; ensure SHT31 connected   |
+| Power not switching (HubVolt)     | Relay not triggered                 | Check GPIO, circuit, or transistor bias|
+| Device restarts unexpectedly      | Server unreachable or crash         | Verify IP, power stability, firmware   |
+
+---
+
+## License & Credits
+
+Developed during the **Summer Research Internship Program (SRIP)** at **IIT Gandhinagar**.
+
+---
