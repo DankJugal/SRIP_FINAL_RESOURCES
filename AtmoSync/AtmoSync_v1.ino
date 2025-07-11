@@ -39,8 +39,24 @@ const char* ApPassword = "configureme";
 // Device Name
 String device_name = "";
 
+
+#define NUM_READINGS 60
+#define READING_INTERVAL_MS 20
+#define DISPLAY_INTERVAL_MS 60000
+
+float temperatureReadings[NUM_READINGS];
+float humidityReadings[NUM_READINGS];
+int readingIndex = 0;
+bool bufferFilled = false;
+
+unsigned long lastReadingTime = 0;
+unsigned long lastDisplayUpdate = 0;
+
+float avgTemperature = 0;
+float avgHumidity = 0;
+
 // String Display for scrolling
-String displaystr = "";
+String displaystr = "00.0C 00.0%RH";
 
 // Web page handler
 void handleRoot() {
@@ -286,11 +302,38 @@ void connectToSavedWiFi() {
   }
 }
 
+void updateSensorReadings() {
+  if (millis() - lastReadingTime >= READING_INTERVAL_MS) {
+    lastReadingTime = millis();
+    
+    float temp = sht31.readTemperature();
+    float hum = sht31.readHumidity();
+    
+    // Store in circular buffer
+    temperatureReadings[readingIndex] = temp;
+    humidityReadings[readingIndex] = hum;
+
+    readingIndex = (readingIndex + 1) % NUM_READINGS;
+    if (readingIndex == 0) bufferFilled = true;
+
+    // Calculate moving average only if buffer filled
+    if (bufferFilled) {
+      float sumTemp = 0, sumHum = 0;
+      for (int i = 0; i < NUM_READINGS; i++) {
+        sumTemp += temperatureReadings[i];
+        sumHum += humidityReadings[i];
+      }
+      avgTemperature = sumTemp / NUM_READINGS;
+      avgHumidity = sumHum / NUM_READINGS;
+    }
+  }
+}
+
 String sense(const String& arg) {
-  //Sense the temperature and format it to 2 decimal places
-  String temperature = String(sht31.readTemperature(), 1) + "C";
-  //Sense the humidity and format it to 2 decimal places
-  String humidity = String(sht31.readHumidity(), 1) + "%RH";
+  //Sense the temperature and format it to 1 decimal places
+  String temperature = String(avgTemperature, 1) + "C";
+  //Sense the humidity and format it to 1 decimal places
+  String humidity = String(avgHumidity, 1) + "%RH";
   displaystr = temperature + " " + humidity;
 
   return device_name + " " + arg + " " + displaystr;
@@ -365,9 +408,17 @@ void setup() {
 void loop() {
   configServer.handleClient();
 
-  // Animate the current scroll message
+  updateSensorReadings();
+
+  // Update display readings every 60 seconds and average available
+  if (millis() - lastDisplayUpdate >= DISPLAY_INTERVAL_MS && bufferFilled) {
+    lastDisplayUpdate = millis();
+    displaystr = String(avgTemperature, 1) + "C " + String(avgHumidity, 1) + "%RH";
+  }
+
+  // Animate the current readings on display
   if (myDisplay.displayAnimate()) {
-  myDisplay.displayClear();
-  myDisplay.displayScroll(displaystr.c_str(), PA_RIGHT, PA_SCROLL_LEFT, 100);
-}
+    myDisplay.displayClear();
+    myDisplay.displayScroll(displaystr.c_str(), PA_RIGHT, PA_SCROLL_LEFT, 100);
+  }
 }
