@@ -33,6 +33,7 @@ All files/
 │   ├── AtmoSync.svg                # Schematic as SVG image
 │   ├── AtmoSync_v1.ino             # Arduino/ESP32 firmware source code
 │   └── Gerber_AtmoSync_v1.zip      # Gerber files for PCB fabrication
+|   └── AtmoSync Setup Guide        # Setup Guide for AtmoSync
 ├── HubVolt/
 │   ├── Enclosure_design/           # 3D enclosure design files (STL/STEP/etc.)
 │   ├── Schematic_HubVolt_v1/       # KiCAD or PDF schematic files for HubVolt
@@ -40,6 +41,7 @@ All files/
 │   ├── Gerber_HubVolt_v1.1.zip     # Gerber files v1.1 for PCB, the version 1.1 uses fixed voltage Buck converter
 │   ├── HubVolt.svg                 # Schematic as SVG image
 │   └── HubVolt_v1.ino              # Arduino/ESP32 firmware source code
+|   └── HubVolt Setup Guide         # Setup Guide for HubVolt
 └── readme.md                       # This documentation file
 ```
 
