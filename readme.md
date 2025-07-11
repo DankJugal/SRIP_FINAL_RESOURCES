@@ -36,8 +36,8 @@ All files/
 ├── HubVolt/
 │   ├── Enclosure_design/           # 3D enclosure design files (STL/STEP/etc.)
 │   ├── Schematic_HubVolt_v1/       # KiCAD or PDF schematic files for HubVolt
-│   ├── Gerber_HubVolt_v1.0.zip     # Gerber files v1.0 for PCB
-│   ├── Gerber_HubVolt_v1.1.zip     # Gerber files v1.1 for PCB
+│   ├── Gerber_HubVolt_v1.0.zip     # Gerber files v1.0 for PCB, the version 1.0 uses adjustable Buck converter
+│   ├── Gerber_HubVolt_v1.1.zip     # Gerber files v1.1 for PCB, the version 1.1 uses fixed voltage Buck converter
 │   ├── HubVolt.svg                 # Schematic as SVG image
 │   └── HubVolt_v1.ino              # Arduino/ESP32 firmware source code
 └── readme.md                       # This documentation file
